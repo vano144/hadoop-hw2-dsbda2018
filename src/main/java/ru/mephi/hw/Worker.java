@@ -24,14 +24,17 @@ public class Worker {
         return sb.toString();
     }
 
+    // getter for random salary from 10 to 100000
     public static int getRndSalary() {
         return ThreadLocalRandom.current().nextInt(10, 100000 + 1);
     }
 
+    // getter for random valid month number
     public static int getRndMonthNumber() {
         return ThreadLocalRandom.current().nextInt(1, 12 + 1);
     }
 
+    // getter for passport number in format XX XX YYYYYY as in Russia - https://ru.wikipedia.org/wiki/Паспорт_гражданина_Российской_Федерации
     public static String getRndPassportNumber () {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 12; i++) {

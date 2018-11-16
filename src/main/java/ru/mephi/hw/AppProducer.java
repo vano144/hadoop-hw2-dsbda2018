@@ -18,6 +18,7 @@ public class AppProducer {
     Producer producer;
 
     public AppProducer() {
+        // producer base properties
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, Constants.KAFKA_BROKERS);
         props.put(ProducerConfig.CLIENT_ID_CONFIG, Constants.CLIENT_ID);
@@ -27,6 +28,7 @@ public class AppProducer {
     }
 
     public void addDataFromCsvFile(String csvFile) {
+        // send generated data to Kafka
         String line;
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
 
@@ -44,11 +46,13 @@ public class AppProducer {
     }
 
     public void send(String passportNumber, int monthNumber, int salary) {
+        // convert to valid str
         producer.send(new ProducerRecord<String, String>(Constants.TOPIC,
                 null, Worker.getCorrectRecord(passportNumber, monthNumber, salary)));
     }
 
     public void send(String passportNumber, String monthNumber, String salary) {
+        // convert to valid str
         producer.send(new ProducerRecord<String, String>(Constants.TOPIC,
                  null, Worker.getCorrectRecord(passportNumber, monthNumber, salary)));
     }
@@ -56,6 +60,7 @@ public class AppProducer {
 
 
     public void generateData(int AmountOfRecords) {
+        // case without csv - java generate data and write it to kafka topic
         for (int i = 0; i < AmountOfRecords; i++) {
             String passportNumber = Worker.getRndPassportNumber();
             for (int j = 0; j <  ThreadLocalRandom.current().nextInt(1, 10 + 1); j++) {

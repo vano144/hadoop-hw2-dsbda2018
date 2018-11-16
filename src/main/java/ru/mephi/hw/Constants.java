@@ -1,5 +1,7 @@
 package ru.mephi.hw;
 
+// Basic application settings
+
 public class Constants {
     public static int AMOUNT_OF_GENERATED_RECORDS = 100;
     public static String KAFKA_BROKERS = "127.0.0.1:9092";

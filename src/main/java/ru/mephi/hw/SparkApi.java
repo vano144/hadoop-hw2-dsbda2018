@@ -16,6 +16,7 @@ public class SparkApi {
     JavaSparkContext context;
 
     public SparkApi() {
+        // initialize spark connection with JavaSparkContext
         final SparkConf sparkConf = new SparkConf().setAppName("Workers").setMaster("local");
         context = new JavaSparkContext(sparkConf);
 
@@ -26,7 +27,10 @@ public class SparkApi {
     }
 
     public JavaPairRDD<String, Double> runSparkTask(ArrayList<String> workers) {
+
         JavaRDD<String> lines = context.parallelize(workers);
+
+        // str data -> mapStruct(str, <int,int>) -> reduce -> map(str, int/int)
         final JavaPairRDD<String, Double> data = lines
                 .mapToPair((x) -> {
                     String[] record = x.split(",");
@@ -43,6 +47,8 @@ public class SparkApi {
                             return (double) a / b;
                         }
                 );
+
+        // output to stdout
         data.foreach(x -> {
             String output = String.format("Mean salary for passport:%s = %f", x._1, x._2);
             System.out.println(output);

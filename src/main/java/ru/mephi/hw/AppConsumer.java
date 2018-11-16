@@ -14,6 +14,7 @@ public class AppConsumer {
     Consumer consumer;
 
     public AppConsumer() {
+        // initialize base properties
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", Constants.KAFKA_BROKERS);
         properties.setProperty("group.id","1");
@@ -29,9 +30,11 @@ public class AppConsumer {
         ArrayList<String> result = new ArrayList<>();
         int i = 0;
         String[] workerRecord;
+        // polling data from kafka
         while(i < Constants.KAFKA_POLL_AMOUNTS) {
 
             ConsumerRecords<String,String> records = consumer.poll(Constants.KAFKA_POLL_INTERVAL);
+            // limit kafka connection by attempts
             if (records.isEmpty())
             {
                 i++;
@@ -39,6 +42,7 @@ public class AppConsumer {
             }
             for (ConsumerRecord<String,String> record : records) {
                 workerRecord = record.value().split(Constants.CSV_SPITTER);
+                // get only valid data to kafka
                 if (workerRecord.length == 3) {
                     result.add(new StringBuilder(workerRecord[0]).append(Constants.CSV_SPITTER).append(workerRecord[2]).toString());
                 }

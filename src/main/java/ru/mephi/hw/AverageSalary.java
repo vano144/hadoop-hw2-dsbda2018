@@ -41,5 +41,6 @@ public class AverageSalary {
                 return;
             }
         }
+        runConsumer();
     }
 }

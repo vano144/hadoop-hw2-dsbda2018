@@ -17,6 +17,7 @@ public class SparkApi {
 
     public SparkApi() {
         // initialize spark connection with JavaSparkContext
+//        final SparkConf sparkConf = new SparkConf().setAppName("Workers").setMaster("spark://MacBook-Pro-Ivan.local:7077");
         final SparkConf sparkConf = new SparkConf().setAppName("Workers").setMaster("local");
         context = new JavaSparkContext(sparkConf);
 
@@ -36,14 +37,14 @@ public class SparkApi {
                     String[] record = x.split(",");
                     int salary = Integer.parseInt(record[1]);
                     String passportNumber = record[0];
-                    return new Tuple2<String, Pair<Integer, Integer>>(passportNumber, new Pair(salary, 1));
+                    return new Tuple2<String, Tuple2<Integer, Integer>>(passportNumber, new Tuple2(salary, 1));
                 })
-                .reduceByKey((Function2<Pair<Integer, Integer>, Pair<Integer, Integer>, Pair<Integer, Integer>>)
-                        (i1, i2) -> new Pair(i1.getKey() + i2.getKey(), i1.getValue() + i2.getValue()))
-                .mapValues((Function<Pair<Integer, Integer>, Double>)
+                .reduceByKey((Function2<Tuple2<Integer, Integer>, Tuple2<Integer, Integer>, Tuple2<Integer, Integer>>)
+                        (i1, i2) -> new Tuple2(i1._1 + i2._1, i1._2 + i2._2))
+                .mapValues((Function<Tuple2<Integer, Integer>, Double>)
                         f -> {
-                            Integer a = f.getKey();
-                            Integer b = f.getValue();
+                            Integer a = f._1;
+                            Integer b = f._2;
                             return (double) a / b;
                         }
                 );
